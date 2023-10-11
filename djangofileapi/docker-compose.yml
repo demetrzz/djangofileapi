@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    env_file:
+      - .env
+  web:
+    build: .
+#    command: sh -c "python manage.py makemigrations &&
+#                    python manage.py migrate &&
+#                    python manage.py runserver 0.0.0.0:8000"
+    entrypoint: /djangofileapi/server-entrypoint.sh
+    expose:
+      - 8000
+    volumes:
+      - static_volume:/djangofileapi/staticfiles
+    env_file:
+      - .env
+    depends_on:
+      - db
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:80
+    volumes:
+      - /default.conf:/default.conf
+      - static_volume:/djangofileapi/staticfiles
+    depends_on:
+      - web
+  redis:
+    image: redis:alpine
+    restart: always
+    expose:
+      - '6381'
+    ports:
+      - '6381:6381'
+  celery:
+    restart: always
+    build: .
+    command: celery -A djangofileapi worker -l info
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+      - web
+volumes:
+  static_volume:
