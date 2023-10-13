@@ -22,7 +22,7 @@ services:
   nginx:
     build: ./nginx
     ports:
-      - 1337:80
+      - 80:80
     volumes:
       - /default.conf:/default.conf
       - static_volume:/djangofileapi/staticfiles
