@@ -7,14 +7,12 @@ services:
       - .env
   web:
     build: .
-#    command: sh -c "python manage.py makemigrations &&
-#                    python manage.py migrate &&
-#                    python manage.py runserver 0.0.0.0:8000"
     entrypoint: /djangofileapi/server-entrypoint.sh
     expose:
       - 8000
     volumes:
       - static_volume:/djangofileapi/staticfiles
+      - media_volume:/djangofileapi/mediafiles
     env_file:
       - .env
     depends_on:
@@ -24,8 +22,8 @@ services:
     ports:
       - 80:80
     volumes:
-      - /default.conf:/default.conf
       - static_volume:/djangofileapi/staticfiles
+      - media_volume:/djangofileapi/mediafiles
     depends_on:
       - web
   redis:
@@ -47,3 +45,4 @@ services:
       - web
 volumes:
   static_volume:
+  media_volume:

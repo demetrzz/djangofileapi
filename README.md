@@ -10,16 +10,17 @@
 ```sh
 git clone https://github.com/demetrzz/djangofileapi
 ```
-- создать файл .env в корне проекта по примеру:
+- создать файл .env в корне проекта по примеру, добавить домен/ip вашего сервера в ALLOWED_HOSTS:
 ```sh
-POSTGRES_DB=db
-POSTGRES_NAME=djangofileapi
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=testpassword
-```
-- добавить домен/ip сервера в ALLOWED_HOSTS в settings.py:
-```sh
-ALLOWED_HOSTS = ['YOUR_DOMAIN_HERE']
+DB_ENGINE=django.db.backends.postgresql_psycopg2
+DB_DB=db
+DB_NAME=djangofileapi
+DB_USER=postgres
+DB_PASSWORD=testpassword
+DB_PORT=5432
+DEBUG=False
+ALLOWED_HOSTS=0.0.0.0 127.0.0.1 localhost [::1]
+SECRET_KEY=your_key_here
 ```
 - настроить и запустить контейнеры docker:
 ```sh
@@ -28,7 +29,7 @@ docker compose up
 ```
 - создать базу данных в контейнере:
 ```sh
-docker exec -it container_id psql -U my_user -d my_db --password
+docker exec -it container_id psql -U my_user
 create database djangofileapi;
 ```
 
@@ -51,5 +52,4 @@ create database djangofileapi;
 http://94.228.121.80/api/files/
 
 ## TODO:
-- вынести ALLOWED_HOSTS в .env файл
 - настроить https
